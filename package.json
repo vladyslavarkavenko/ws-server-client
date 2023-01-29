@@ -8,7 +8,7 @@
     "client": "node client.js",
     "test": "mocha --timeout 60000"
   },
-  "author": "",
+  "author": "Vladyslav Arkavenko",
   "license": "ISC",
   "dependencies": {
     "ws": "^8.12.0"

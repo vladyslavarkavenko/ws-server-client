@@ -61,7 +61,7 @@ module.exports = class WsServer {
             });
         }, 1000);
 
-        console.log(`Server successfully started on ws://${host}:${port}`);
+        console.debug(`Server successfully started on ws://${host}:${port}`);
     }
 
     async destroy() {

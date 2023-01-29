@@ -10,9 +10,9 @@ process.on('SIGINT', async () => {
     try {
         const isUnsubscribed = await client.unsubscribe();
         if (isUnsubscribed) {
-            console.log("Successfully unsubscribed!");
+            console.debug("Successfully unsubscribed!");
         } else {
-            console.error("Unsubscribe attempt failed");
+            console.debug("Unsubscribe attempt failed");
         }
 
         await client.destroy();

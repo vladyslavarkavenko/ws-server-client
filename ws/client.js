@@ -5,17 +5,23 @@ const {
     MESSAGE_STATUS,
     getRequestMessage
 } = require("./messages");
+
 module.exports = class WsClient {
     #wsc;
+    #wsIsOpenPromise;
 
     constructor({host, port}) {
         const url = `ws://${host}:${port}`;
+
         this.#wsc = new WebSocketClient(url);
+        this.#wsIsOpenPromise = new Promise((resolve) => {
+            this.#wsc.on('open', () => {
+                console.debug(`Client successfully connected to ${url}`);
+                resolve();
+            })
+        })
 
         // Debug purposes only
-        this.#wsc.on('open', () => {
-            console.log(`Client successfully connected to ${url}`);
-        })
         this.#wsc.on('message', (message) => {
             let parsedMessage;
             try {
@@ -27,20 +33,8 @@ module.exports = class WsClient {
         })
     }
 
-    async #waitTillWscIsInitialised() {
-        if (!this.#wsc.readyState) {
-            return new Promise((resolve, reject) => {
-                setTimeout(() => {
-                    this.#waitTillWscIsInitialised()
-                        .then(resolve)
-                        .catch(reject);
-                }, 500);
-            })
-        }
-    }
-
     async #wscRequest(messageType) {
-        await this.#waitTillWscIsInitialised();
+        await this.#wsIsOpenPromise;
 
         this.#wsc.send(getRequestMessage(messageType));
 
